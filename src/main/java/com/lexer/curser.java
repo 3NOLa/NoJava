@@ -22,7 +22,7 @@ public class curser {
         this.code_index = 0;
         this.current_lexeme = new StringBuilder();
         this.code = Files.readString(Path.of(filepath));
-        this.cur_loc = new location(0, 0);
+        this.cur_loc = new location();
     }
 
     public curser(File file) throws IOException{

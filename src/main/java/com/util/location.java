@@ -3,14 +3,19 @@ package com.util;
 public class location{
     int line, column;
 
+    public location(){
+        this.line = 1;
+        this.column = 1;
+    }
+
     public location(int line, int column){
         this.line = line;
         this.column = column;
     }
 
     public void reset() {
-        this.line = 0;
-        this.column = 0;
+        this.line = 1;
+        this.column = 1;
     }
 
 
