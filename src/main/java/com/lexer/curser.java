@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import com.util.location;
+
 import java.lang.Character;
 
 public class curser {
@@ -12,14 +15,14 @@ public class curser {
     private String code;
     private int code_index;
     public StringBuilder current_lexeme;
-    public Token.location cur_loc;
+    public location cur_loc;
 
     public curser(String filepath) throws IOException{
         this.filepath = filepath;
         this.code_index = 0;
         this.current_lexeme = new StringBuilder();
         this.code = Files.readString(Path.of(filepath));
-        this.cur_loc = new Token.location(0, 0);
+        this.cur_loc = new location(0, 0);
     }
 
     public curser(File file) throws IOException{
@@ -27,7 +30,14 @@ public class curser {
         this.code_index = 0;
         this.current_lexeme = new StringBuilder();
         this.code = Files.readString(Path.of(filepath));
-        this.cur_loc = new Token.location(0, 0);
+        this.cur_loc = new location(0, 0);
+    }
+
+    public void reset() throws IOException{
+        this.current_lexeme.setLength(0);
+        this.code = Files.readString(Path.of(filepath));
+        this.code_index = 0;
+        this.cur_loc.reset();
     }
 
     public char peek(){

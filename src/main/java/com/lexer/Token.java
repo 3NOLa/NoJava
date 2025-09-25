@@ -1,5 +1,9 @@
 package com.lexer;
 
+import java.util.Map;
+
+import com.util.location;
+
 public class Token{
 
     public enum TokenType {
@@ -119,33 +123,57 @@ public class Token{
         UNKNOWN
     }
 
-    public static class location{
-        int line, column;
+    public static final Map<String, TokenType> KEYWORDS = Map.ofEntries(
+        Map.entry("if", TokenType.KW_IF),
+        Map.entry("else", TokenType.KW_ELSE),
+        Map.entry("while", TokenType.KW_WHILE),
+        Map.entry("for", TokenType.KW_FOR),
+        Map.entry("do", TokenType.KW_DO),
+        Map.entry("switch", TokenType.KW_SWITCH),
+        Map.entry("case", TokenType.KW_CASE),
+        Map.entry("default", TokenType.KW_DEFAULT),
+        Map.entry("break", TokenType.KW_BREAK),
+        Map.entry("continue", TokenType.KW_CONTINUE),
+        Map.entry("return", TokenType.KW_RETURN),
+        Map.entry("import", TokenType.KW_IMPORT),
+        Map.entry("package", TokenType.KW_PACKAGE),
+        Map.entry("public", TokenType.KW_PUBLIC),
+        Map.entry("private", TokenType.KW_PRIVATE),
+        Map.entry("protected", TokenType.KW_PROTECTED),
+        Map.entry("class", TokenType.KW_CLASS),
+        Map.entry("interface", TokenType.KW_INTERFACE),
+        Map.entry("enum", TokenType.KW_ENUM),
+        Map.entry("extends", TokenType.KW_EXTENDS),
+        Map.entry("implements", TokenType.KW_IMPLEMENTS),
+        Map.entry("abstract", TokenType.KW_ABSTRACT),
+        Map.entry("final", TokenType.KW_FINAL),
+        Map.entry("static", TokenType.KW_STATIC),
+        Map.entry("void", TokenType.KW_VOID),
+        Map.entry("boolean", TokenType.KW_BOOLEAN),
+        Map.entry("byte", TokenType.KW_BYTE),
+        Map.entry("short", TokenType.KW_SHORT),
+        Map.entry("int", TokenType.KW_INT),
+        Map.entry("long", TokenType.KW_LONG),
+        Map.entry("float", TokenType.KW_FLOAT),
+        Map.entry("double", TokenType.KW_DOUBLE),
+        Map.entry("char", TokenType.KW_CHAR),
+        Map.entry("super", TokenType.KW_SUPER),
+        Map.entry("this", TokenType.KW_THIS),
+        Map.entry("new", TokenType.KW_NEW),
+        Map.entry("try", TokenType.KW_TRY),
+        Map.entry("catch", TokenType.KW_CATCH),
+        Map.entry("finally", TokenType.KW_FINALLY),
+        Map.entry("throw", TokenType.KW_THROW),
+        Map.entry("throws", TokenType.KW_THROWS),
+        Map.entry("synchronized", TokenType.KW_SYNCHRONIZED),
+        Map.entry("volatile", TokenType.KW_VOLATILE),
+        Map.entry("transient", TokenType.KW_TRANSIENT),
+        Map.entry("instanceof", TokenType.KW_INSTANCEOF),
+        Map.entry("assert", TokenType.KW_ASSERT),
+        Map.entry("native", TokenType.KW_NATIVE),
+        Map.entry("strictfp", TokenType.KW_STRICTFP)
+    );
 
-        public location(int line, int column){
-            this.line = line;
-            this.column = column;
-        }
-
-        public location copy(){
-            return new location(this.line, this.column);
-        }
-
-        public void update(char c){
-            if (c == '\n') {
-                this.line++;
-                this.column = 0;
-            }else{
-                this.column++;
-            }
-
-        }
-
-        @Override
-        public String toString(){
-            return "line: " + line + ", column: " + column;
-        }
-    }
 
     public String value;
     public TokenType type;
