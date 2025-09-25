@@ -31,6 +31,10 @@ public class Lexer {
         analyze();
     }
 
+    public char firstLexemeChar(){
+        return cur.current_lexeme.charAt(0);
+    }
+
     public Token nextToken(){
         cur.clearLexeme();
         cur.updateLexeme();
@@ -59,15 +63,17 @@ public class Lexer {
     }
 
     public TokenType literalType(){
-        if(cur.current_lexeme.charAt(0) == '\"'){
+        if(firstLexemeChar() == '\"'){
             cur.clearLexeme(); //to skip the first quote
-            cur.updateUntil(curser.isNotQuotes());
+            cur.updateUntilwithCon(curser.isNotQuotes(), curser.isBackSlashWithCon());
             cur.consume(); //to skip the seconed quote
-            if (cur.current_lexeme.length() == 1) {
-                return TokenType.CHAR_LITERAL;
-            }else
-                return TokenType.STRING_LITERAL;
-        }else if(curser.isDigit().check(cur.current_lexeme.charAt(0))){
+            return TokenType.STRING_LITERAL;
+        }else if (firstLexemeChar() == '\'') {
+            cur.clearLexeme(); //to skip the first quote
+            cur.updateUntilwithCon(curser.isNotSingleQuotes(), curser.isBackSlashWithCon());
+            cur.consume(); //to skip the seconed quote
+            return TokenType.CHAR_LITERAL;
+        }else if(curser.isDigit().check(firstLexemeChar())){
             cur.updateUntil(curser.isDigit());
             if(cur.peek() == '.'){
                 cur.updateLexeme();
@@ -80,7 +86,7 @@ public class Lexer {
     }
 
     public TokenType symbolType(){
-        switch (cur.current_lexeme.charAt(0)){
+        switch (firstLexemeChar()){
             case '\0': return TokenType.EOF;
             case '(': return TokenType.LPAREN;
             case ')': return TokenType.RPAREN;

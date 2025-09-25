@@ -48,7 +48,10 @@ public class curser {
 
     public char get(){
         if (code_index < code.length()){
-            cur_loc.update(code.charAt(code_index));
+            if(isEndLine())
+                cur_loc.newLine();
+            else
+                cur_loc.update();
             return code.charAt(code_index++);   
         }
         return '\0';
@@ -56,9 +59,16 @@ public class curser {
 
     public void consume(){
         if (code_index < code.length()){
-            cur_loc.update(code.charAt(code_index + 1));
+            if(isEndLine())
+                cur_loc.newLine();
+            else
+                cur_loc.update();
             code_index++;   
         }
+    }
+
+    public boolean isEndLine(){
+        return peek() == '\n';
     }
 
     public void updateLexeme(){
@@ -105,14 +115,59 @@ public class curser {
         };
     }
 
-    public static FuncArg isNotQuotes() {
+    public static FuncArg isSingleQuotes() {
         return (char c) -> {
-            return !(c == '\"') && !(c == '\''); 
+            return (c == '\''); 
         };
     }
 
+    public static FuncArg isNotQuotes() {
+        return (char c) -> {
+            return !(c == '\"'); 
+        };
+    }
+
+    public static FuncArg isNotSingleQuotes() {
+        return (char c) -> {
+            return !(c == '\''); 
+        };
+    }
+
+    public static FuncArg isBackSlash() {
+        return (char c) -> {
+            return (c == '\\'); 
+        };
+    }
+
+    public static FuncArg isBackSlashWithCon() {
+        final boolean[] wasBackSlash = {false};
+        return (char c) -> {
+            if (c == '\\') {
+                if (!wasBackSlash[0]) {
+                    wasBackSlash[0] = true;
+                    return true; // first backslash
+                } else {
+                    // second backslash in a row
+                    return false;
+                }
+            } else {
+                wasBackSlash[0] = false;
+                return false;
+            }
+        };
+    }
+
+
     public void updateUntil(FuncArg func){
         while (func.check(peek())) {
+            updateLexeme();
+        }   
+    }
+
+    public void updateUntilwithCon(FuncArg func, FuncArg cond){
+        while (func.check(peek())) {
+            if (cond.check(peek()))
+                updateLexeme();
             updateLexeme();
         }   
     }

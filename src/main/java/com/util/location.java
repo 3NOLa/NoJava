@@ -18,14 +18,13 @@ public class location{
         return new location(this.line, this.column);
     }
 
-    public void update(char c){
-        if (c == '\n') {
-            this.line++;
-            this.column = 0;
-        }else{
-            this.column++;
-        }
+    public void newLine(){
+        this.line++;
+        this.column = 0;
+    }
 
+    public void update(){
+        this.column++;
     }
 
     @Override
