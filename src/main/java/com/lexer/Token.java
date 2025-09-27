@@ -187,7 +187,7 @@ public class Token{
 
     @Override
     public String toString(){
-        return "Token: " + value + " type: " + type.name() + " " + loc.toString();
+        return "Token(" + type.name() + ", " + value + ", " + loc.toString() + ")";
     }
 
 }
