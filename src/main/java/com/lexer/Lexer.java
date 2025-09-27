@@ -2,17 +2,18 @@ package com.lexer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.lexer.Token.TokenType;
 
 public class Lexer {
 
     private curser cur;
-    private ArrayList<Token> tokens; 
+    private List<Token> tokens;
 
 
     public Lexer(String filepath) throws IOException{ // because curser constructor is also throwing IOException  
-        tokens = new ArrayList<>();
+        tokens = new ArrayList<Token>();
         this.cur = new curser(filepath);
     }
 

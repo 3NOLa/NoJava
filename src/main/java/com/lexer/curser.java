@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.util.curserInterface;
 import com.util.location;
 
 import java.lang.Character;
 
-public class curser {
+public class curser implements curserInterface<Character> {
     
     public String filepath;
     private String code;
@@ -30,7 +31,7 @@ public class curser {
         this.code_index = 0;
         this.current_lexeme = new StringBuilder();
         this.code = Files.readString(Path.of(filepath));
-        this.cur_loc = new location(0, 0);
+        this.cur_loc = new location();
     }
 
     public void reset() throws IOException{
@@ -40,13 +41,13 @@ public class curser {
         this.cur_loc.reset();
     }
 
-    public char peek(){
+    public Character peek(){
         if (code_index < code.length())
             return code.charAt(code_index);
         return '\0';
     }
 
-    public char get(){
+    public Character get(){
         if (code_index < code.length()){
             if(isEndLine())
                 cur_loc.newLine();
@@ -77,6 +78,21 @@ public class curser {
 
     public void clearLexeme(){
         current_lexeme.setLength(0);;
+    }
+
+    public char nextLexeme(){
+        char lex;
+        while ((lex = get()) != '\0') {
+            if(lex == '/' && peek() == '/'){
+                while ((lex = get()) != '\n');
+                continue;
+            }
+            if (lex == ' ' || lex == '\n' || lex == '\t' || lex == '\r') {
+                continue;
+            }
+            return lex;
+        }
+        return '\0';
     }
 
     @FunctionalInterface
@@ -172,18 +188,4 @@ public class curser {
         }   
     }
 
-    public char nextLexeme(){
-        char lex;
-        while ((lex = get()) != '\0') {
-            if(lex == '/' && peek() == '/'){
-                while ((lex = get()) != '\n');
-                continue;
-            }
-            if (lex == ' ' || lex == '\n' || lex == '\t' || lex == '\r') {
-                continue;
-            }
-            return lex;
-        }
-        return '\0';
-    }
 }

@@ -1,7 +1,7 @@
 package com.util;
 
 public class location{
-    int line, column;
+    private int line, column;
 
     public location(){
         this.line = 1;
@@ -18,6 +18,8 @@ public class location{
         this.column = 1;
     }
 
+    public int getLine() { return line; }
+    public int getColumn() { return column; }
 
     public location copy(){
         return new location(this.line, this.column);

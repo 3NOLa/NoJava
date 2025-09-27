@@ -9,8 +9,8 @@ public class OperatorParselet implements InfixParselets{
 
     @Override
     public Expression parse(Parser par, Token t, precedence prec) {
-        Expression left = par;
+        Expression left;
         Expression right = par.parseExpression();
-        return new OperatorExpression(t.loc, t.type, left, right);
+        return null;//new OperatorExpression(t.loc, t.type, left, right);
     }
 }
