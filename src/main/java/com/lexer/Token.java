@@ -66,7 +66,6 @@ public class Token{
         KW_INSTANCEOF,
         KW_ASSERT,
         KW_NATIVE,
-        KW_STRICTFP,
 
         // Operators
         OP_PLUS,        // +
@@ -157,6 +156,7 @@ public class Token{
         Map.entry("float", TokenType.KW_FLOAT),
         Map.entry("double", TokenType.KW_DOUBLE),
         Map.entry("char", TokenType.KW_CHAR),
+        Map.entry("string", TokenType.KW_STRING),
         Map.entry("super", TokenType.KW_SUPER),
         Map.entry("this", TokenType.KW_THIS),
         Map.entry("new", TokenType.KW_NEW),
@@ -171,7 +171,10 @@ public class Token{
         Map.entry("instanceof", TokenType.KW_INSTANCEOF),
         Map.entry("assert", TokenType.KW_ASSERT),
         Map.entry("native", TokenType.KW_NATIVE),
-        Map.entry("strictfp", TokenType.KW_STRICTFP)
+        // aren't actually keywords but, it's easy for the code to understand
+        Map.entry("true", TokenType.TRUE_LITERAL),
+        Map.entry("false", TokenType.FALSE_LITERAL),
+        Map.entry("null", TokenType.NULL_LITERAL)
     );
 
 

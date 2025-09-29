@@ -9,7 +9,7 @@ public abstract class Expression extends ASTnode {
         super(loc);
     }
 
-    public abstract void eval();
+    //public abstract void eval();
 
     @Override
     public String toString() {

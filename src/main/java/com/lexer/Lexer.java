@@ -8,8 +8,8 @@ import com.lexer.Token.TokenType;
 
 public class Lexer {
 
-    private curser cur;
-    private List<Token> tokens;
+    private final curser cur;
+    private final List<Token> tokens;
 
 
     public Lexer(String filepath) throws IOException{ // because curser constructor is also throwing IOException  
@@ -99,38 +99,80 @@ public class Lexer {
             case '}': return TokenType.RBRACE;
             case '[': return TokenType.LBRACKET;
             case ']': return TokenType.RBRACKET;
-            case '+': return TokenType.OP_PLUS;
-            case '-': return TokenType.OP_MINUS;
-            case '*': return TokenType.OP_MUL;
-            case '/': return TokenType.OP_DIV;
-            case '=': 
+            case '?': return TokenType.QUESTION;
+            case '~': return TokenType.OP_BIT_NOT;
+            case '+':
+                if(cur.peek() == '=') {
+                    cur.updateLexeme();
+                    return TokenType.OP_ADD_ASSIGN;
+                } else if(cur.peek() == '+'){
+                    cur.updateLexeme();
+                    return TokenType.OP_INC;
+                } return TokenType.OP_PLUS;
+            case '-':
+                if(cur.peek() == '=') {
+                    cur.updateLexeme();
+                    return TokenType.OP_SUB_ASSIGN;
+                } else if(cur.peek() == '-'){
+                    cur.updateLexeme();
+                    return TokenType.OP_DEC;
+                } return TokenType.OP_MINUS;
+            case '*':
+                if(cur.peek() == '=') {
+                    cur.updateLexeme();
+                    return TokenType.OP_MUL_ASSIGN;
+                }return TokenType.OP_MUL;
+            case '/':
+                if(cur.peek() == '=') {
+                    cur.updateLexeme();
+                    return TokenType.OP_DIV_ASSIGN;
+                } return TokenType.OP_DIV;
+            case '%':
+                if(cur.peek() == '=') {
+                    cur.updateLexeme();
+                    return TokenType.OP_MOD_ASSIGN;
+                } return TokenType.OP_MOD;
+            case '=':
                 if(cur.peek() == '=') {
                     cur.updateLexeme();
                     return TokenType.OP_EQ;
-                }  else return TokenType.OP_ASSIGN;
+                } return TokenType.OP_ASSIGN;
             case '!': 
                 if(cur.peek() == '='){
                     cur.updateLexeme();
                     return TokenType.OP_NEQ;
-                } else return TokenType.OP_NOT;
+                } return TokenType.OP_NOT;
             case '>': 
                 if(cur.peek() == '=') {
                     cur.updateLexeme();
                     return TokenType.OP_GTE; 
-                } else return TokenType.OP_GT;
+                } return TokenType.OP_GT;
             case '<': 
                 if(cur.peek() == '='){
                     cur.updateLexeme();
                     return TokenType.OP_LTE;
-                }  else return TokenType.OP_LT;
-            case '&': if(cur.peek() == '&'){
+                } return TokenType.OP_LT;
+            case '&':
+                if(cur.peek() == '='){
+                    cur.updateLexeme();
+                    return TokenType.OP_AND_ASSIGN;
+                }else if(cur.peek() == '&'){
                     cur.updateLexeme();
                     return TokenType.OP_AND;
-                } 
-            case '|': if(cur.peek() == '|'){
+                } return TokenType.OP_BIT_AND;
+            case '|':
+                if(cur.peek() == '='){
+                    cur.updateLexeme();
+                    return TokenType.OP_OR_ASSIGN;
+                } else if(cur.peek() == '|'){
                     cur.updateLexeme();
                     return TokenType.OP_OR;
-                } 
+                } return TokenType.OP_BIT_OR;
+            case '^':
+                if(cur.peek() == '^'){
+                    cur.updateLexeme();
+                    return TokenType.OP_XOR_ASSIGN;
+                } return TokenType.OP_BIT_XOR;
             default:
                return TokenType.UNKNOWN;
         }
