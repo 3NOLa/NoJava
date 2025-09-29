@@ -8,9 +8,8 @@ import com.parser.expression.OperatorExpression;
 public class OperatorParselet implements InfixParselets{
 
     @Override
-    public Expression parse(Parser par, Token t, precedence prec) {
-        Expression left;
-        Expression right = par.parseExpression();
-        return null;//new OperatorExpression(t.loc, t.type, left, right);
+    public Expression parse(Parser par, Token t, Expression left) {
+        Expression right = par.parseExpression(par.mapBp.get(t.type));
+        return new OperatorExpression(t.loc, t.type, left, right);
     }
 }

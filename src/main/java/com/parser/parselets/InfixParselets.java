@@ -7,18 +7,17 @@ import com.parser.expression.Expression;
 public interface InfixParselets extends Parselets{
 
     public enum precedence{
-        LO_OR(1),
-        LO_AND(2),
-        BIT_OR(3),
-        BIT_XOR(4),
-        BIT_AND(5),
-        EQUALITY(6),
-        RELATIONAL(7),
-        SHIFT(8),
-        SUM(9),
-        MUL(10),
-        PREFIX(11),
-        POSTFIX(12);
+        Assignment(1),
+        Conditional(2),
+        Logical(3),
+        BITWISE(4),
+        EQUALITY(5),
+        RELATIONAL(6),
+        SHIFT(7),
+        SUM(8),
+        MUL(9),
+        PREFIX(10),
+        POSTFIX(11);
 
         public final int bp;
 
@@ -27,5 +26,5 @@ public interface InfixParselets extends Parselets{
         }
     }
 
-    public Expression parse(Parser par, Token t, precedence prec);
+    public Expression parse(Parser par, Token t, Expression left);
 }

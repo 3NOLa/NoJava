@@ -9,6 +9,8 @@ public abstract class Expression extends ASTnode {
         super(loc);
     }
 
+    public abstract void eval();
+
     @Override
     public String toString() {
         return super.toString() + "Expression: ";
