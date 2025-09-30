@@ -4,7 +4,7 @@ import com.lexer.Token;
 import com.parser.Parser;
 import com.parser.expression.Expression;
 
-public interface nudParselets extends Parselets{
+public interface LedParselets extends Parselets{
 
     public enum precedence{
         Assignment(1),
