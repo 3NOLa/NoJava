@@ -6,22 +6,25 @@ import com.parser.expression.Expression;
 
 public interface LedParselets extends Parselets{
 
-    public enum precedence{
-        Assignment(1),
-        Conditional(2),
-        Logical(3),
-        BITWISE(4),
-        EQUALITY(5),
-        RELATIONAL(6),
-        SHIFT(7),
-        SUM(8),
-        MUL(9),
-        PREFIX(10),
-        POSTFIX(11);
+    public enum Precedence {
+        PRIMARY(0),
+        CALL(1),        // function calls, array access, member access
+        POSTFIX(2),     // postfix ++, --
+        PREFIX(3),      // prefix ++, --, unary +, -, !
+        PRODUCT(4),     // *, /
+        SUM(5),         // +, -
+        SHIFT(6),       // <<, >>
+        RELATIONAL(7),  // <, >, <=, >=
+        EQUALITY(8),    // ==, !=
+        BITWISE(9),     // &, ^, |
+        LOGICAL(10),    // &&, ||
+        CONDITIONAL(11),// ?:
+        ASSIGNMENT(12), // =, +=, -= ...
+        EOF(13);
 
         public final int bp;
 
-        precedence(int bp){
+        Precedence(int bp){
             this.bp = bp;
         }
     }

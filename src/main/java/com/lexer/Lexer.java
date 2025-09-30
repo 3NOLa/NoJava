@@ -9,7 +9,7 @@ import com.lexer.Token.TokenType;
 public class Lexer {
 
     private final curser cur;
-    private final List<Token> tokens;
+    public final List<Token> tokens;
 
 
     public Lexer(String filepath) throws IOException{ // because curser constructor is also throwing IOException  

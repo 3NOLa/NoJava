@@ -35,4 +35,18 @@ public class TokenCurser implements curserInterface <Token>{
         if(tokenIndex < tokensAmount)
             tokenIndex++;
     }
+
+    public void consume(Token.TokenType type) {
+        if(peek().type == type) {
+            if(tokenIndex < tokensAmount)
+                tokenIndex++;
+        } else throw new ParseException("Expected token: " + type.name(), peek());
+    }
+
+    public boolean match(Token.TokenType type){
+        if(peek().type == type){
+            consume();
+            return true;
+        } return false;
+    }
 }
