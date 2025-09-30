@@ -5,9 +5,12 @@ import com.util.location;
 
 public class PrimaryExpression extends Expression{
 
-    Token.TokenType type;
+    public Token.TokenType type;
+    public String strValue;
 
-    public PrimaryExpression(location loc) {
+    public PrimaryExpression(location loc, Token.TokenType type, String strValue){
         super(loc);
+        this.type = type;
+        this.strValue = strValue;
     }
 }

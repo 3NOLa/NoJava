@@ -5,7 +5,7 @@ import com.parser.Parser;
 import com.parser.expression.Expression;
 import com.parser.expression.OperatorExpression;
 
-public class OperatorParselet implements InfixParselets{
+public class OperatorParselet implements nudParselets {
 
     @Override
     public Expression parse(Parser par, Token t, Expression left) {
