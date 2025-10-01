@@ -13,4 +13,9 @@ public class PrimaryExpression extends Expression{
         this.type = type;
         this.strValue = strValue;
     }
+
+    @Override
+    public String toStringHelper(int depth) {
+        return indent(depth) + "PrimaryExpression(" + type + ", " + strValue + ")\n";
+    }
 }

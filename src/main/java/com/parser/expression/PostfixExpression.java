@@ -15,7 +15,14 @@ public class PostfixExpression extends Expression{
     }
 
     @Override
-    public String toString() {
-        return super.toString() + getClass().getName() + " (" + operator.name() + "))\n";
+    public String toStringHelper(int depth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(indent(depth)).append("PostfixExpression(").append(operator).append(")\n");
+        if (left != null) {
+            sb.append(indent(depth)).append("  left:\n");
+            sb.append(left.toStringHelper(depth + 2));
+        }
+        return sb.toString();
     }
+
 }

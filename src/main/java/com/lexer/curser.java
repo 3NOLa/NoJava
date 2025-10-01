@@ -68,6 +68,11 @@ public class curser implements curserInterface<Character> {
         }
     }
 
+    @Override
+    public boolean isEOF() {
+        return false;
+    }
+
     public boolean isEndLine(){
         return peek() == '\n';
     }

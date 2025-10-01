@@ -12,4 +12,14 @@ public class AccessException extends Expression {
         this.access = access;
         this.member = member;
     }
+
+    @Override
+    public String toStringHelper(int depth) {
+        return "";
+    }
+
+    public String toString() {
+
+        return super.toString() + getClass().getSimpleName() + "\naccess: "  + access.toString() + "\nmember: " + member.toString() ;
+    }
 }

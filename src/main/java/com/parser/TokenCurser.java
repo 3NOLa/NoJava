@@ -36,6 +36,13 @@ public class TokenCurser implements curserInterface <Token>{
             tokenIndex++;
     }
 
+    @Override
+    public boolean isEOF() {
+        if(peek().type == Token.TokenType.EOF)
+            return true;
+        return false;
+    }
+
     public void consume(Token.TokenType type) {
         if(peek().type == type) {
             if(tokenIndex < tokensAmount)

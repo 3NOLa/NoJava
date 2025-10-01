@@ -14,7 +14,7 @@ public class CallParselet implements LedParselets {
         List<Expression> args = new ArrayList<>();
         if (!parser.cur.match(Token.TokenType.RPAREN)) {
             do {
-                args.add(parser.parseExpression(Precedence.PRIMARY));
+                args.add(parser.parseExpression(Precedence.CALL));
             } while (parser.cur.match(Token.TokenType.COMMA));
             parser.cur.consume(Token.TokenType.RPAREN);
         }

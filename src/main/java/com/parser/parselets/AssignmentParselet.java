@@ -8,7 +8,7 @@ import com.parser.expression.Expression;
 public class AssignmentParselet implements LedParselets{
     @Override
     public Expression parse(Parser par, Token t, Expression left) {
-        Expression right = par.parseExpression(par.mapBp.get(t.type));
+        Expression right = par.parseExpression(Precedence.START);
         return new AssignmentExpression(t.loc, t.type, left, right);
     }
 }

@@ -15,7 +15,13 @@ public class PrefixExpression extends Expression{
     }
 
     @Override
-    public String toString() {
-        return super.toString() + getClass().getName() + " (" + operator.name() + right.toString() + "))\n";
+    public String toStringHelper(int depth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(indent(depth)).append("PostfixExpression(").append(operator).append(")\n");
+        if (right != null) {
+            sb.append(indent(depth)).append("  right:\n");
+            sb.append(right.toStringHelper(depth + 2));
+        }
+        return sb.toString();
     }
 }

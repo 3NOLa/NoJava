@@ -2,6 +2,7 @@ package com.parser;
 
 import com.lexer.Lexer;
 import com.lexer.Token;
+import com.parser.expression.EqualityExpression;
 import com.parser.expression.Expression;
 import com.parser.parselets.*;
 
@@ -21,6 +22,12 @@ public class Parser {
         populateMaps();
     }
 
+    public boolean endExpression(){
+        if(cur.isEOF() || cur.match(Token.TokenType.SEMICOLON))
+            return true;
+        return false;
+    }
+
     public Expression parseExpression(LedParselets.Precedence prec){
         Token t = cur.get();
 
@@ -30,7 +37,9 @@ public class Parser {
         }
         Expression left = PrefixFunc.parse(this, t);
 
-        while(prec.bp < mapBp.get(cur.peek().type).bp) {
+        //System.out.println(cur.peek().toString());
+
+        while(!endExpression() && prec.bp < mapBp.get(cur.peek().type).bp) {
             Token Inft = cur.get();
             LedParselets InfixFunc = mapInifix.get(Inft.type);
             if (InfixFunc == null) {
@@ -50,6 +59,7 @@ public class Parser {
     private final PrimaryParselet PRIMARY = new PrimaryParselet();
     private final CallParselet CALL = new CallParselet();
     private final MemberAccessParselet ACCESS = new MemberAccessParselet();
+    private final EqualityParselet EQ = new EqualityParselet();
 
     private void populateMaps(){
         // ----- Literals & identifiers -----
@@ -79,12 +89,12 @@ public class Parser {
         mapInifix.put(Token.TokenType.OP_DIV, OPERTOR);
         mapInifix.put(Token.TokenType.OP_MOD, OPERTOR);
 
-        mapInifix.put(Token.TokenType.OP_EQ, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_NEQ, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_LT, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_GT, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_LTE, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_GTE, OPERTOR);
+        mapInifix.put(Token.TokenType.OP_EQ, EQ);
+        mapInifix.put(Token.TokenType.OP_NEQ, EQ);
+        mapInifix.put(Token.TokenType.OP_LT, EQ);
+        mapInifix.put(Token.TokenType.OP_GT, EQ);
+        mapInifix.put(Token.TokenType.OP_LTE, EQ);
+        mapInifix.put(Token.TokenType.OP_GTE, EQ);
 
         mapInifix.put(Token.TokenType.OP_AND, OPERTOR);
         mapInifix.put(Token.TokenType.OP_OR, OPERTOR);
@@ -159,16 +169,20 @@ public class Parser {
         mapBp.put(Token.TokenType.DOT, LedParselets.Precedence.CALL);
         mapBp.put(Token.TokenType.QUESTION, LedParselets.Precedence.CONDITIONAL);
         mapBp.put(Token.TokenType.EOF, LedParselets.Precedence.EOF);
+
+        //DONT HAVE PREC BUT STILL NEED TO RETURN A NUMBER FROM THE MAP
+        mapBp.put(Token.TokenType.RPAREN, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.COLON, LedParselets.Precedence.START);
     }
 
     public static void main(String[] args) throws IOException {
-        Lexer lex = new Lexer("C:\\projJava\\javacompiler\\src\\test\\java\\parser\\javaExpressionTest");
+        Lexer lex = new Lexer("C:\\projJava\\javacompiler\\src\\test\\java\\parser\\javaExpressionTest.txt");
         lex.analyze();
         System.out.println(lex.toString());
         Parser par = new Parser(new TokenCurser(lex.tokens));
 
         while(par.cur.peek().type != Token.TokenType.EOF){
-            System.out.println(par.parseExpression(LedParselets.Precedence.PRIMARY));
+            System.out.println(par.parseExpression(LedParselets.Precedence.START));
         }
     }
     
