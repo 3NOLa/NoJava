@@ -2,17 +2,20 @@ package com.parser;
 
 import com.lexer.Lexer;
 import com.lexer.Token;
-import com.parser.expression.EqualityExpression;
 import com.parser.expression.Expression;
 import com.parser.parselets.*;
+import com.parser.statement.*;
 
 import java.io.IOException;
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Parser {
 
     public final TokenCurser cur;
-    private final HashMap<Token.TokenType, LedParselets> mapInifix = new HashMap<>();
+    private final HashMap<Token.TokenType, LedParselets> mapInfix = new HashMap<>();
     private final HashMap<Token.TokenType, NudParselets> mapPrefix = new HashMap<>();
     public final HashMap<Token.TokenType, LedParselets.Precedence> mapBp = new HashMap<>(); // bp = binding power
 
@@ -23,9 +26,7 @@ public class Parser {
     }
 
     public boolean endExpression(){
-        if(cur.isEOF() || cur.match(Token.TokenType.SEMICOLON))
-            return true;
-        return false;
+        return cur.isEOF() || cur.match(Token.TokenType.SEMICOLON);
     }
 
     public Expression parseExpression(LedParselets.Precedence prec){
@@ -37,17 +38,82 @@ public class Parser {
         }
         Expression left = PrefixFunc.parse(this, t);
 
-        //System.out.println(cur.peek().toString());
-
-        while(!endExpression() && prec.bp < mapBp.get(cur.peek().type).bp) {
+        while(prec.bp < mapBp.get(cur.peek().type).bp) {
             Token Inft = cur.get();
-            LedParselets InfixFunc = mapInifix.get(Inft.type);
+            LedParselets InfixFunc = mapInfix.get(Inft.type);
             if (InfixFunc == null) {
                 throw new ParseException("Expression doesn't continue with a Inifix token", Inft);
             }
             left = InfixFunc.parse(this, Inft, left);
         }
         return left;
+    }
+
+    public Statement parseStatement(){
+        return new ReturnStatement(cur.peek().loc, parseExpression(LedParselets.Precedence.START));
+    }
+
+    public ReturnStatement parseReturnStatement(){
+        cur.consume(Token.TokenType.KW_RETURN);
+        Expression value = parseExpression(LedParselets.Precedence.START);
+        return new ReturnStatement(value.loc, value);
+    }
+
+    public IfStatement parseIfStatement(){
+        cur.consume(Token.TokenType.KW_IF); //if statement starts with if keyword
+
+        Expression condition = parseExpression(LedParselets.Precedence.START);
+        Statement then = parseBlockStatement();
+        if(cur.peek().type == Token.TokenType.KW_ELSE){
+            cur.consume(Token.TokenType.KW_ELSE);
+            Statement _else = parseBlockStatement();
+            return new IfStatement(then.loc, condition, then, _else);
+        }
+        return new IfStatement(then.loc, condition, then);
+    }
+
+    public BlockStatement parseBlockStatement(){
+        cur.consume(Token.TokenType.LBRACE); //block statement starts with a {
+
+        List<Statement> stmts = new ArrayList<>();
+        while (cur.peek().type != Token.TokenType.RBRACE){ //block statement ends with a }
+            stmts.add(parseStatement());
+        }
+        cur.consume(Token.TokenType.RBRACE);
+
+        return new BlockStatement(stmts.get(0).loc, stmts);
+    }
+
+    public WhileStatement whileStatement(){
+        cur.consume(Token.TokenType.KW_WHILE); //while statement starts with a while
+
+        Expression condition = parseExpression(LedParselets.Precedence.START); //while condition
+        Statement stmt = parseStatement();
+
+        return new WhileStatement(condition.loc, stmt, condition);
+    }
+
+
+    public DoWhileStatement doWhileStatement(){
+        cur.consume(Token.TokenType.KW_DO); //DOwhile statement starts with a DO
+
+        Statement stmt = parseStatement();
+        cur.consume(Token.TokenType.KW_WHILE); // MUST HAVE WHILE KEYWORD AT THE END;
+        Expression condition = parseExpression(LedParselets.Precedence.START);
+
+        return new DoWhileStatement(stmt.loc, stmt, condition);
+    }
+
+
+    public ForStatement forStatement(){
+        cur.consume(Token.TokenType.KW_FOR); //for statement starts with a for
+
+        Statement init = parseStatement();
+        Expression condition = parseExpression(LedParselets.Precedence.START); //while condition
+        Expression update = parseExpression(LedParselets.Precedence.START);
+        Statement stmt = parseStatement();
+
+        return new ForStatement(init.loc, stmt, condition, update, init);
     }
 
     private final OperatorParselet OPERTOR = new OperatorParselet();
@@ -83,52 +149,52 @@ public class Parser {
         mapPrefix.put(Token.TokenType.LPAREN, GROUP);
 
         // ----- Infix binary operators -----
-        mapInifix.put(Token.TokenType.OP_PLUS, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_MINUS, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_MUL, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_DIV, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_MOD, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_PLUS, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_MINUS, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_MUL, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_DIV, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_MOD, OPERTOR);
 
-        mapInifix.put(Token.TokenType.OP_EQ, EQ);
-        mapInifix.put(Token.TokenType.OP_NEQ, EQ);
-        mapInifix.put(Token.TokenType.OP_LT, EQ);
-        mapInifix.put(Token.TokenType.OP_GT, EQ);
-        mapInifix.put(Token.TokenType.OP_LTE, EQ);
-        mapInifix.put(Token.TokenType.OP_GTE, EQ);
+        mapInfix.put(Token.TokenType.OP_EQ, EQ);
+        mapInfix.put(Token.TokenType.OP_NEQ, EQ);
+        mapInfix.put(Token.TokenType.OP_LT, EQ);
+        mapInfix.put(Token.TokenType.OP_GT, EQ);
+        mapInfix.put(Token.TokenType.OP_LTE, EQ);
+        mapInfix.put(Token.TokenType.OP_GTE, EQ);
 
-        mapInifix.put(Token.TokenType.OP_AND, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_OR, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_BIT_AND, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_BIT_OR, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_BIT_XOR, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_SHL, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_SHR, OPERTOR);
-        mapInifix.put(Token.TokenType.OP_USHR, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_AND, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_OR, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_BIT_AND, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_BIT_OR, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_BIT_XOR, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_SHL, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_SHR, OPERTOR);
+        mapInfix.put(Token.TokenType.OP_USHR, OPERTOR);
 
         // ----- Assignment operators (usually right-associative) -----
-        mapInifix.put(Token.TokenType.OP_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_ADD_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_SUB_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_MUL_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_DIV_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_MOD_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_SHL_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_SHR_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_USHR_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_AND_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_OR_ASSIGN, ASSIGNMENT);
-        mapInifix.put(Token.TokenType.OP_XOR_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_ADD_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_SUB_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_MUL_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_DIV_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_MOD_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_SHL_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_SHR_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_USHR_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_AND_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_OR_ASSIGN, ASSIGNMENT);
+        mapInfix.put(Token.TokenType.OP_XOR_ASSIGN, ASSIGNMENT);
 
         // ----- Postfix operators -----
-        mapInifix.put(Token.TokenType.OP_INC, POSTFIX);
-        mapInifix.put(Token.TokenType.OP_DEC, POSTFIX);
+        mapInfix.put(Token.TokenType.OP_INC, POSTFIX);
+        mapInfix.put(Token.TokenType.OP_DEC, POSTFIX);
 
         // ----- Function call / member access -----
-        mapInifix.put(Token.TokenType.LPAREN, CALL); // f(x)
-        mapInifix.put(Token.TokenType.DOT, ACCESS);
+        mapInfix.put(Token.TokenType.LPAREN, CALL); // f(x)
+        mapInfix.put(Token.TokenType.DOT, ACCESS);
 
         // ----- Ternary operator -----
-        mapInifix.put(Token.TokenType.QUESTION, COND);
+        mapInfix.put(Token.TokenType.QUESTION, COND);
 
         // ----- LedParselets.Precedence mapping -----
         // Example: map every operator to its binding power
@@ -173,6 +239,7 @@ public class Parser {
         //DONT HAVE PREC BUT STILL NEED TO RETURN A NUMBER FROM THE MAP
         mapBp.put(Token.TokenType.RPAREN, LedParselets.Precedence.START);
         mapBp.put(Token.TokenType.COLON, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.SEMICOLON, LedParselets.Precedence.START);
     }
 
     public static void main(String[] args) throws IOException {
@@ -183,6 +250,7 @@ public class Parser {
 
         while(par.cur.peek().type != Token.TokenType.EOF){
             System.out.println(par.parseExpression(LedParselets.Precedence.START));
+            par.cur.consume(Token.TokenType.SEMICOLON);
         }
     }
     
