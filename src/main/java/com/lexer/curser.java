@@ -106,15 +106,11 @@ public class curser implements curserInterface<Character> {
     }
 
     public static FuncArg isAlpha() {
-        return (char c) -> {
-            return Character.isAlphabetic(c); 
-        };
+        return Character::isAlphabetic;
     }
 
     public static FuncArg isDigit() {
-        return (char c) -> {
-            return Character.isDigit(c); 
-        };
+        return Character::isDigit;
     }
 
     public static FuncArg isDigitOrAlpha() {
@@ -138,7 +134,7 @@ public class curser implements curserInterface<Character> {
 
     public static FuncArg isSingleQuotes() {
         return (char c) -> {
-            return (c == '\''); 
+            return (c == '\'');
         };
     }
 
