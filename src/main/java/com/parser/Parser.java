@@ -14,7 +14,6 @@ public class Parser {
 
     public final TokenCurser cur;
 
-
     public Parser(TokenCurser cur){
         this.cur = cur;
     }
@@ -32,6 +31,7 @@ public class Parser {
         }
         Expression left = PrefixFunc.parse(this, t);
 
+        //System.out.println("token type: " + cur.peek().type);
         while(prec.bp < Grammer.mapBp.get(cur.peek().type).bp) {
             Token Inft = cur.get();
             LedParselets InfixFunc = Grammer.mapInfix.get(Inft.type);
@@ -44,13 +44,15 @@ public class Parser {
     }
 
     public Statement parseStatement(){
-        Token t = cur.get();
+        Token t = cur.peek();
 
         StatementsParselets parseFunc = Grammer.mapStatementPars.get(t.type);
         if (parseFunc != null)
             return parseFunc.parse(this);
 
-        return new ReturnStatement(cur.peek().loc, parseExpression(LedParselets.Precedence.START));
+        Statement stm = new ExpressionStatement(parseExpression(LedParselets.Precedence.START));
+        cur.consume(Token.TokenType.SEMICOLON);// expression statement must end with semicolon ;
+        return stm;
     }
 
     public static void main(String[] args) throws IOException {
@@ -60,8 +62,7 @@ public class Parser {
         Parser par = new Parser(new TokenCurser(lex.tokens));
 
         while(par.cur.peek().type != Token.TokenType.EOF){
-            System.out.println(par.parseExpression(LedParselets.Precedence.START));
-            par.cur.consume(Token.TokenType.SEMICOLON);
+            System.out.println(par.parseStatement());
         }
     }
 

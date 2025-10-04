@@ -13,4 +13,15 @@ public class BlockStatement extends Statement{
         super(loc);
         this.statements = statements;
     }
+
+    @Override
+    public String toStringHelper(int depth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(indent(depth)).append(getClass().getSimpleName()).append("\n");
+
+        for(Statement stm : statements){
+            sb.append(stm.toStringHelper(depth+2));
+        }
+        return sb.toString();
+    }
 }

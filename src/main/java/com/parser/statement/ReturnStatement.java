@@ -11,4 +11,16 @@ public class ReturnStatement extends Statement{
         super(loc);
         this.value = value;
     }
+
+    @Override
+    public String toStringHelper(int depth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(indent(depth)).append(getClass().getSimpleName()).append("\n");
+
+        if(value != null) {
+            sb.append(indent(depth)).append("  value:\n");
+            sb.append(value.toStringHelper(depth + 2));
+        }
+        return sb.toString();
+    }
 }

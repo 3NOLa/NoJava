@@ -107,7 +107,7 @@ public class Grammer {
         // ----- mapStatementPars mapping -----
         mapStatementPars.put(Token.TokenType.KW_RETURN, RETURN);
         mapStatementPars.put(Token.TokenType.KW_IF, IF);
-        mapStatementPars.put(Token.TokenType.RBRACE, BLOCK);
+        mapStatementPars.put(Token.TokenType.LBRACE, BLOCK);
         mapStatementPars.put(Token.TokenType.KW_WHILE, WHILE);
         mapStatementPars.put(Token.TokenType.KW_DO, DOWHILE);
         mapStatementPars.put(Token.TokenType.KW_FOR, FOR);
@@ -156,5 +156,6 @@ public class Grammer {
         mapBp.put(Token.TokenType.RPAREN, LedParselets.Precedence.START);
         mapBp.put(Token.TokenType.COLON, LedParselets.Precedence.START);
         mapBp.put(Token.TokenType.SEMICOLON, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.LBRACE, LedParselets.Precedence.START);
     }
 }

@@ -11,8 +11,13 @@ public abstract class ASTnode{
 
     @Override
     public String toString(){
-        return "(AST node, location: " + loc.toString() + ", ";
+        return toStringHelper(0);
     }
 
-    //public abstract <T> T accept();
+    public abstract String toStringHelper(int depth);
+
+    protected String indent(int depth) {
+        return "  ".repeat(depth);
+    }
+
 }

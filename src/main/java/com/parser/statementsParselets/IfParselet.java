@@ -13,10 +13,10 @@ public class IfParselet implements StatementsParselets {
         par.cur.consume(Token.TokenType.KW_IF); //if statement starts with if keyword
 
         Expression condition = par.parseExpression(LedParselets.Precedence.START);
-        Statement then = par.parseBlockStatement();
+        Statement then = par.parseStatement();
         if (par.cur.peek().type == Token.TokenType.KW_ELSE) {
             par.cur.consume(Token.TokenType.KW_ELSE);
-            Statement _else = par.parseBlockStatement();
+            Statement _else = par.parseStatement();
             return new IfStatement(then.loc, condition, then, _else);
         }
         return new IfStatement(then.loc, condition, then);
