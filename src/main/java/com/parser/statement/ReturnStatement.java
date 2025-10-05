@@ -5,7 +5,7 @@ import com.util.location;
 
 public class ReturnStatement extends Statement{
 
-    Expression value;
+    public Expression value;
 
     public ReturnStatement(location loc, Expression value) {
         super(loc);

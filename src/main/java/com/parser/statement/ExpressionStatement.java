@@ -4,7 +4,7 @@ import com.parser.expression.Expression;
 
 public class ExpressionStatement extends Statement{
 
-    Expression expr;
+    public Expression expr;
 
     public ExpressionStatement(Expression expr) {
         super(expr.loc);

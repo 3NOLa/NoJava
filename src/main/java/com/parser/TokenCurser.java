@@ -30,10 +30,24 @@ public class TokenCurser implements curserInterface <Token>{
         return null;
     }
 
+    public Token get(Token.TokenType type){
+        if(peek().type == type){
+            if (tokenIndex < tokensAmount)
+                return tokens.get(tokenIndex++);
+        } throw new ParseException("Expected token: " + type.name(), peek());
+    }
+
     @Override
     public void consume() {
         if(tokenIndex < tokensAmount)
             tokenIndex++;
+    }
+
+    public void consume(Token.TokenType type) {
+        if(peek().type == type) {
+            if(tokenIndex < tokensAmount)
+                tokenIndex++;
+        }else throw new ParseException("Expected token: " + type.name(), peek());
     }
 
     @Override
@@ -43,17 +57,11 @@ public class TokenCurser implements curserInterface <Token>{
         return false;
     }
 
-    public void consume(Token.TokenType type) {
-        if(peek().type == type) {
-            if(tokenIndex < tokensAmount)
-                tokenIndex++;
-        } else throw new ParseException("Expected token: " + type.name(), peek());
-    }
-
     public boolean match(Token.TokenType type){
         if(peek().type == type){
             consume();
             return true;
         } return false;
     }
+
 }

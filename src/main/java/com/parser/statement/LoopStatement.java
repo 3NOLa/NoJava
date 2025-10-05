@@ -7,8 +7,8 @@ import java.io.StringReader;
 
 public abstract class LoopStatement extends Statement{
 
-    Statement body;
-    Expression condition;
+    public Statement body;
+    public Expression condition;
 
     public LoopStatement(location loc, Statement body, Expression condition) {
         super(loc);

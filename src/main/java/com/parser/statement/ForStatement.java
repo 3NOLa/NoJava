@@ -5,8 +5,8 @@ import com.util.location;
 
 public class ForStatement extends LoopStatement{
 
-    Statement init;
-    Expression update;
+    public Statement init;
+    public Expression update;
 
     public ForStatement(location loc, Statement body, Expression condition, Expression update, Statement init) {
         super(loc, body, condition);

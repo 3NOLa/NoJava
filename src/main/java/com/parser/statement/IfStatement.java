@@ -5,9 +5,9 @@ import com.util.location;
 
 public class IfStatement extends Statement{
 
-    Expression condition;
-    Statement then;
-    Statement _else;
+    public Expression condition;
+    public Statement then;
+    public Statement _else;
 
     public IfStatement(location loc, Expression condition, Statement then) {
         super(loc);

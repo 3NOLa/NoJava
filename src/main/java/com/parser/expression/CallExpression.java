@@ -7,8 +7,8 @@ import java.util.List;
 
 public class CallExpression extends Expression{
 
-    Expression func;
-    List<Expression> args = new ArrayList<>();
+    public Expression func;
+    public List<Expression> args = new ArrayList<>();
 
     public CallExpression(location loc, Expression func, List<Expression> args) {
         super(loc);

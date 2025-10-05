@@ -1,21 +1,25 @@
 package com.parser;
 
 import com.lexer.Token;
+import com.parser.declaration.parselets.VariableDeclarationParselet;
 import com.parser.parselets.*;
-import com.parser.statement.ReturnStatement;
 import com.parser.statementsParselets.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Grammer {
     
     //lookup maps for the parser
+    public static final Set<Token.TokenType> Modifiers = new HashSet<>();
+    public static final Set<Token.TokenType> isAccessModifier = new HashSet<>();
     public static final HashMap<Token.TokenType, StatementsParselets> mapStatementPars = new HashMap<>();
     public static final HashMap<Token.TokenType, LedParselets> mapInfix = new HashMap<>();
     public static final HashMap<Token.TokenType, NudParselets> mapPrefix = new HashMap<>();
     public static final HashMap<Token.TokenType, LedParselets.Precedence> mapBp = new HashMap<>(); // bp = binding power
 
-    //implnetion of parselet expression functions
+    //implementation of parselet expression functions
     private static final OperatorParselet OPERTOR = new OperatorParselet();
     private static final AssignmentParselet ASSIGNMENT = new AssignmentParselet();
     private static final ConditionalParselet COND = new ConditionalParselet();
@@ -27,13 +31,18 @@ public class Grammer {
     private static final MemberAccessParselet ACCESS = new MemberAccessParselet();
     private static final EqualityParselet EQ = new EqualityParselet();
 
-    //implnetion of parselet Statements functions
+    //implementation of parselet Statements functions
     private static final ReturnParselet RETURN = new ReturnParselet();
     private static final IfParselet IF = new IfParselet();
     private static final BlockParselets BLOCK = new BlockParselets();
     private static final WhileParselet WHILE = new WhileParselet();
     private static final DoWhileParselet DOWHILE = new DoWhileParselet();
-    private static final ForParselet FOR=  new ForParselet();
+    private static final ForParselet FOR = new ForParselet();
+    public static final VariableDecStmtParselet VARDECSTMT =  new VariableDecStmtParselet();
+
+    //implementation of parselet Declarations functions
+    private static final VariableDeclarationParselet VARDEC =  new VariableDeclarationParselet();
+
 
     static {
         // ----- Literals & identifiers -----
@@ -111,6 +120,31 @@ public class Grammer {
         mapStatementPars.put(Token.TokenType.KW_WHILE, WHILE);
         mapStatementPars.put(Token.TokenType.KW_DO, DOWHILE);
         mapStatementPars.put(Token.TokenType.KW_FOR, FOR);
+        mapStatementPars.put(Token.TokenType.KW_INT, VARDECSTMT);
+        mapStatementPars.put(Token.TokenType.KW_STRING, VARDECSTMT);
+        mapStatementPars.put(Token.TokenType.KW_FLOAT, VARDECSTMT);
+        mapStatementPars.put(Token.TokenType.KW_BOOLEAN, VARDECSTMT);
+        mapStatementPars.put(Token.TokenType.KW_CHAR, VARDECSTMT);
+
+        // ----- isAccessModifier mapping -----
+        isAccessModifier.add(Token.TokenType.KW_PUBLIC);
+        isAccessModifier.add(Token.TokenType.KW_PRIVATE);
+        isAccessModifier.add(Token.TokenType.KW_DEFAULT);
+        isAccessModifier.add(Token.TokenType.KW_PROTECTED);
+
+        // ----- Modifiers mapping -----
+        // example public private static
+        Modifiers.add(Token.TokenType.KW_PUBLIC);
+        Modifiers.add(Token.TokenType.KW_PRIVATE);
+        Modifiers.add(Token.TokenType.KW_PROTECTED);
+        Modifiers.add(Token.TokenType.KW_STATIC);
+        Modifiers.add(Token.TokenType.KW_ABSTRACT);
+        Modifiers.add(Token.TokenType.KW_DEFAULT);
+        Modifiers.add(Token.TokenType.KW_FINAL);
+        Modifiers.add(Token.TokenType.KW_SYNCHRONIZED);
+        Modifiers.add(Token.TokenType.KW_TRANSIENT);
+        Modifiers.add(Token.TokenType.KW_NATIVE);
+        Modifiers.add(Token.TokenType.KW_VOLATILE);
 
         // ----- LedParselets.Precedence mapping -----
         // Example: map every operator to its binding power
