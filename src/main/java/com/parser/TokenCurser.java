@@ -50,6 +50,19 @@ public class TokenCurser implements curserInterface <Token>{
         }else throw new ParseException("Expected token: " + type.name(), peek());
     }
 
+    public void consume(Token.TokenType ... types) {
+        boolean found = false;
+        for(Token.TokenType type : types) {
+            if (peek().type == type) {
+                found = true;
+                if (tokenIndex < tokensAmount)
+                    tokenIndex++;
+            }
+        }
+        if(!found)
+            throw new ParseException("not right token: ", peek());
+    }
+
     @Override
     public boolean isEOF() {
         if(peek().type == Token.TokenType.EOF)
@@ -61,6 +74,15 @@ public class TokenCurser implements curserInterface <Token>{
         if(peek().type == type){
             consume();
             return true;
+        } return false;
+    }
+
+    public boolean match(Token.TokenType ... types){
+        for(Token.TokenType type : types){
+            if(peek().type == type){
+                consume();
+                return true;
+            }
         } return false;
     }
 

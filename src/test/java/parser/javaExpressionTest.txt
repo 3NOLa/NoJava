@@ -1,20 +1,36 @@
-public void function(int u, int m){
-    float k = 1.3;
-    int y = 0;
-    int X = (y + 10) - 20;
-    while(x < 20){
-        y = (x == 10)? 5 : 8;
-        X = K;
+public class myclass extends biggerClass implements functions, yo{
+
+    public static int count = 0;
+    private final float pi = 3.14;
+    public Declaration parse(Parser par);
+
+    public void function(int u, int m){
+        float k = 1.3;
+        int y = 0;
+        int X = (y + 10) - 20;
+        while(x < 20){
+            y = (x == 10)? 5 : 8;
+            X = K;
+        }
+    }
+
+    public void function(int x, int y){
+        if( y == 10){
+         x = 10;
+        } else{
+            boolean b = true;
+        }
+
+        x = ++y;
     }
 }
 
-public void function(int x, int y){
-    if( y == 10){
-     x = 10;
-    } else{
-        boolean b = true;
+interface functions implements ha, yes{
+    public Declaration parse(Parser par);
+    public int sum();
+    interface functions implements ha, yes{
+        public Declaration parse(Parser par);
+        public int sum();
     }
-
-    x = ++y;
 }
 
