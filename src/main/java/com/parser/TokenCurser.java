@@ -23,6 +23,12 @@ public class TokenCurser implements curserInterface <Token>{
         return null;
     }
 
+    public Token peek(int i) {
+        if(tokenIndex + i < tokensAmount)
+            return tokens.get(tokenIndex + i);
+        return null;
+    }
+
     @Override
     public Token get() {
         if(tokenIndex < tokensAmount)
@@ -85,5 +91,4 @@ public class TokenCurser implements curserInterface <Token>{
             }
         } return false;
     }
-
 }

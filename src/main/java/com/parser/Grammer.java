@@ -27,9 +27,10 @@ public class Grammer {
     private static final PrefixParselet PREFIX = new PrefixParselet();
     private static final GroupParselet GROUP = new GroupParselet();
     private static final PrimaryParselet PRIMARY = new PrimaryParselet();
-    private static final CallParselet CALL = new CallParselet();
+    public static final CallParselet CALL = new CallParselet();
     private static final MemberAccessParselet ACCESS = new MemberAccessParselet();
     private static final EqualityParselet EQ = new EqualityParselet();
+    private static final NewParselet NEW = new NewParselet();
 
     //implementation of parselet Statements functions
     private static final ReturnParselet RETURN = new ReturnParselet();
@@ -54,6 +55,7 @@ public class Grammer {
         mapPrefix.put(Token.TokenType.TRUE_LITERAL, PRIMARY);
         mapPrefix.put(Token.TokenType.FALSE_LITERAL, PRIMARY);
         mapPrefix.put(Token.TokenType.NULL_LITERAL, PRIMARY);
+        mapPrefix.put(Token.TokenType.KW_NEW, NEW);
 
         // ----- Prefix operators -----
         mapPrefix.put(Token.TokenType.OP_MINUS, PREFIX);
@@ -191,5 +193,8 @@ public class Grammer {
         mapBp.put(Token.TokenType.COLON, LedParselets.Precedence.START);
         mapBp.put(Token.TokenType.SEMICOLON, LedParselets.Precedence.START);
         mapBp.put(Token.TokenType.LBRACE, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.KW_NEW, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.IDENTIFIER, LedParselets.Precedence.START);
+        mapBp.put(Token.TokenType.COMMA, LedParselets.Precedence.START);
     }
 }
