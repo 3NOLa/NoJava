@@ -9,8 +9,9 @@ import com.parser.statement.ReturnStatement;
 public class ReturnParselet implements StatementsParselets {
     @Override
     public ReturnStatement parse(Parser par) {
-        par.cur.consume(Token.TokenType.KW_RETURN);
+        Token returnToken = par.cur.get(Token.TokenType.KW_RETURN);
         Expression value = par.parseExpression(LedParselets.Precedence.START);
-        return new ReturnStatement(value.loc, value);
+        par.cur.consume(Token.TokenType.SEMICOLON);
+        return new ReturnStatement(returnToken.loc, value);
     }
 }

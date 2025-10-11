@@ -1,6 +1,8 @@
 package com.parser.expression;
 
 import com.lexer.Token;
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
 public class PostfixExpression extends Expression{
@@ -12,6 +14,11 @@ public class PostfixExpression extends Expression{
         super(loc);
         this.operator = operator;
         this.left = left;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

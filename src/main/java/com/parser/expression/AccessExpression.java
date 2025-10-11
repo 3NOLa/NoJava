@@ -1,16 +1,23 @@
 package com.parser.expression;
 
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
-public class AccessException extends Expression {
+public class AccessExpression extends Expression {
 
     public Expression access;
     public Expression member;
 
-    public AccessException(location loc, Expression access, Expression member) {
+    public AccessExpression(location loc, Expression access, Expression member) {
         super(loc);
         this.access = access;
         this.member = member;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

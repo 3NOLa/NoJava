@@ -2,6 +2,7 @@ package com.parser.statementsParselets;
 
 import com.lexer.Token;
 import com.parser.Parser;
+import com.parser.Type;
 import com.parser.declaration.VariableDeclaration;
 import com.parser.expression.Expression;
 import com.parser.parselets.LedParselets;
@@ -18,7 +19,7 @@ public class VariableDecStmtParselet implements StatementsParselets {
         if (par.cur.match(Token.TokenType.OP_ASSIGN)) {
             initializer = par.parseExpression(LedParselets.Precedence.ASSIGNMENT); //im sending ASSIGNMENT Precedence because i will get only the right side of ana assignment;
         }
-        return new VariableDeclaration(varType.loc, varType.type, identifier.value, initializer);
+        return new VariableDeclaration(varType.loc,new Type(varType.type, varType.value), identifier.value, initializer);
     }
 
     @Override

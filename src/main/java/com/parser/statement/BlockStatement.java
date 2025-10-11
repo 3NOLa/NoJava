@@ -1,5 +1,7 @@
 package com.parser.statement;
 
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.ArrayList;
@@ -12,6 +14,11 @@ public class BlockStatement extends Statement{
     public BlockStatement(location loc, List<Statement> statements) {
         super(loc);
         this.statements = statements;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

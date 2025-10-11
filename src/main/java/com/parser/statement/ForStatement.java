@@ -1,6 +1,8 @@
 package com.parser.statement;
 
 import com.parser.expression.Expression;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 public class ForStatement extends LoopStatement{
@@ -18,6 +20,11 @@ public class ForStatement extends LoopStatement{
         super(loc, body, condition);
         this.init = null;
         this.update = update;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

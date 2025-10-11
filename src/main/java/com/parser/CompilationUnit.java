@@ -3,6 +3,8 @@ package com.parser;
 import com.lexer.Token;
 import com.parser.declaration.Declaration;
 import com.parser.declaration.ImportDeclaration;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.ArrayList;
@@ -30,6 +32,11 @@ public class CompilationUnit extends ASTnode{
 
     public CompilationUnit() {
         super(new location(0,0));
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.parser.declaration;
 
 import com.lexer.Token;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.List;
@@ -12,6 +14,11 @@ public class ImportDeclaration extends Declaration{
 
     public ImportDeclaration(location loc) {
         super(loc);
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

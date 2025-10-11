@@ -1,5 +1,7 @@
 package com.parser.expression;
 
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
 public class NewExpression extends Expression{
@@ -9,6 +11,11 @@ public class NewExpression extends Expression{
     public NewExpression(location loc, Expression constructorCall) {
         super(loc);
         this.constructorCall = constructorCall;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

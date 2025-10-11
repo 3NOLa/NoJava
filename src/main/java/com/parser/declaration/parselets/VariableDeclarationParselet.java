@@ -3,6 +3,7 @@ package com.parser.declaration.parselets;
 import com.lexer.Token;
 import com.parser.ParseException;
 import com.parser.Parser;
+import com.parser.Type;
 import com.parser.declaration.Declaration;
 import com.parser.declaration.VariableDeclaration;
 import com.parser.expression.AssignmentExpression;
@@ -24,6 +25,6 @@ public class VariableDeclarationParselet implements DeclarationParselet{
 
         //par.cur.consume(Token.TokenType.SEMICOLON); not always ends with semicolon exampole func(int x, int y)
 
-        return new VariableDeclaration(varType.loc, varType.type, identifier.value, initializer);
+        return new VariableDeclaration(varType.loc, new Type(varType.type, varType.value), identifier.value, initializer);
     }
 }

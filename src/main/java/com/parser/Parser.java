@@ -7,6 +7,7 @@ import com.parser.expression.Expression;
 import com.parser.parselets.*;
 import com.parser.statement.*;
 import com.parser.statementsParselets.*;
+import com.semantic.SemanticAnalyzer;
 
 import java.io.IOException;
 import java.security.PublicKey;
@@ -61,32 +62,37 @@ public class Parser {
 
     public Declaration parseDeclaration(){
         Token.TokenType[] modifiers = getModifiers();
-        Token type = cur.get(); //or kw (class, interface) or type(int ,char)
+        Token tokentype = cur.get(); //or kw (class, interface) or type(int ,char)
         Token name = cur.get(Token.TokenType.IDENTIFIER);
 
-        if(type.type == Token.TokenType.KW_CLASS){ // class
+        if(tokentype.type == Token.TokenType.KW_CLASS){ // class
             return parseClass(modifiers, name);
-        } else if (type.type == Token.TokenType.KW_INTERFACE) { //interface
+        } else if (tokentype.type == Token.TokenType.KW_INTERFACE) { //interface
             return parseInterface(modifiers, name);
-        } else if(cur.match(Token.TokenType.SEMICOLON)){ //variable declaration
-            return new VariableDeclaration(type.loc, type.type, name.value);
-        } else if (cur.match(Token.TokenType.OP_ASSIGN)) { //variable declaration with a value
-            Expression initializer = parseExpression(LedParselets.Precedence.ASSIGNMENT); //im sending ASSIGNMENT Precedence because i will get only the right side of ana assignment;
-            cur.consume(Token.TokenType.SEMICOLON); // must end with semicolon
-            return new VariableDeclaration(type.loc, type.type, name.value, initializer);
-        } else if (cur.match(Token.TokenType.LPAREN)) { // function
-            List<VariableDeclaration> args = new ArrayList<>();
-            if(cur.peek().type != Token.TokenType.RPAREN)
-                args = parseIdentifierList();
-            cur.consume(Token.TokenType.RPAREN);
-            if(cur.match(Token.TokenType.SEMICOLON)) // function without a body
-                return new FunctionDeclaration(type.loc, modifiers, name.value, type.type, args, null);
-
-            Statement body = parseStatement(); // it's going to be a block statement
-            return new FunctionDeclaration(type.loc, modifiers, name.value, type.type, args, body); // function with a body
         }
+        else {
 
-        return null;
+            Type type = new Type(tokentype.type, tokentype.value);
+            if (cur.match(Token.TokenType.SEMICOLON)) { //variable declaration
+                return new VariableDeclaration(tokentype.loc, type, name.value);
+            } else if (cur.match(Token.TokenType.OP_ASSIGN)) { //variable declaration with a value
+                Expression initializer = parseExpression(LedParselets.Precedence.ASSIGNMENT); //im sending ASSIGNMENT Precedence because i will get only the right side of ana assignment;
+                cur.consume(Token.TokenType.SEMICOLON); // must end with semicolon
+                return new VariableDeclaration(tokentype.loc, type, name.value, initializer);
+            } else if (cur.match(Token.TokenType.LPAREN)) { // function
+                List<VariableDeclaration> args = new ArrayList<>();
+                if (cur.peek().type != Token.TokenType.RPAREN)
+                    args = parseIdentifierList();
+                cur.consume(Token.TokenType.RPAREN);
+                if (cur.match(Token.TokenType.SEMICOLON)) // function without a body
+                    return new FunctionDeclaration(tokentype.loc, modifiers, name.value, type, args, null);
+
+                Statement body = parseStatement(); // it's going to be a block statement
+                return new FunctionDeclaration(tokentype.loc, modifiers, name.value, type, args, body); // function with a body
+            }
+
+            return null;
+        }
     }
 
     private boolean isTypeStart() {
@@ -161,7 +167,7 @@ public class Parser {
 
     public Declaration parseInterface(Token.TokenType[] modifiers, Token name){
         List<Token> superinterface = new ArrayList<>();
-        if(cur.match(Token.TokenType.KW_IMPLEMENTS)){
+        if(cur.match(Token.TokenType.KW_EXTENDS)){
             do{
                 superinterface.add(cur.get());
             }while (cur.match(Token.TokenType.COMMA));
@@ -230,8 +236,12 @@ public class Parser {
         lex.analyze();
         System.out.println(lex.toString());
         Parser par = new Parser(new TokenCurser(lex.tokens));
-        System.out.println(par.parseCompilationUnit());
-
+        CompilationUnit unit = par.parseCompilationUnit();
+        System.out.println(unit);
+        SemanticAnalyzer s =  new SemanticAnalyzer();
+        s.visit(unit);
+        System.out.println("\n\n");
+        s.scopes.printScopes();
 //        while(par.cur.peek().type != Token.TokenType.EOF){
 //            System.out.println(par.parseDeclaration());
 //        }

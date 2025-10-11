@@ -1,6 +1,8 @@
 package com.parser.statement;
 
 import com.parser.expression.Expression;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 
 public class ExpressionStatement extends Statement{
 
@@ -9,6 +11,11 @@ public class ExpressionStatement extends Statement{
     public ExpressionStatement(Expression expr) {
         super(expr.loc);
         this.expr = expr;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

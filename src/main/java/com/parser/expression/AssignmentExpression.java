@@ -1,6 +1,8 @@
 package com.parser.expression;
 
 import com.lexer.Token;
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
 public class AssignmentExpression extends Expression{
@@ -14,6 +16,11 @@ public class AssignmentExpression extends Expression{
         this.condition = condition;
         this.assignee = assignee;
         this.assigned = assigned;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

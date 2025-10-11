@@ -1,6 +1,8 @@
 package com.parser.declaration;
 
 import com.parser.statement.Statement;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.ArrayList;
@@ -13,6 +15,11 @@ public class BlockDeclaration extends Declaration{
     public BlockDeclaration(location loc, List<Declaration> body) {
         super(loc);
         this.body = body;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

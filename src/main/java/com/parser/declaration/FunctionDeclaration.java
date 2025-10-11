@@ -1,27 +1,51 @@
 package com.parser.declaration;
 
 import com.lexer.Token;
+import com.parser.Type;
 import com.parser.statement.Statement;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class FunctionDeclaration extends Declaration{
 
     public Token.TokenType[] Modifiers;
     public String funcName;
-    public Token.TokenType returnType;
+    public Type returnType;
     public List<VariableDeclaration> args;
     public Statement body;
 
     public FunctionDeclaration(location loc, Token.TokenType[] Modifiers, String funcName,
-                               Token.TokenType returnType, List<VariableDeclaration> args, Statement body) {
+                               Type returnType, List<VariableDeclaration> args, Statement body) {
         super(loc);
         this.Modifiers = Modifiers;
         this.funcName = funcName;
         this.returnType = returnType;
         this.args = args;
         this.body = body;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public boolean sameSignature(Object o){
+        if (!(o instanceof FunctionDeclaration func)){
+            throw new RuntimeException("Object isn't a DeclarationFunction");
+        }
+
+        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && Arrays.equals(Modifiers, func.Modifiers);
+    }
+
+    public boolean overLoading(Object o){
+        if (!(o instanceof FunctionDeclaration func)){
+            throw new RuntimeException("Object isn't a DeclarationFunction");
+        }
+
+        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && !Arrays.equals(Modifiers, func.Modifiers);
     }
 
     @Override
@@ -41,7 +65,7 @@ public class FunctionDeclaration extends Declaration{
         sb.append("\n");
 
         sb.append(indent(depth)).append("  function returnType:\n");
-        sb.append(indent(depth + 2)).append(returnType.name()).append("\n");
+        sb.append(indent(depth + 2)).append(returnType.getCanonicalName()).append("\n");
 
         sb.append(indent(depth)).append("  function arguments:\n");
         for(VariableDeclaration arg : args){

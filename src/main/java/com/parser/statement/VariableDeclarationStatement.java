@@ -1,22 +1,30 @@
 package com.parser.statement;
 
 import com.lexer.Token;
+import com.parser.Type;
 import com.parser.declaration.VariableDeclaration;
 import com.parser.expression.Expression;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 public class VariableDeclarationStatement extends Statement{
 
-    VariableDeclaration dec;
+    public VariableDeclaration dec;
 
     public VariableDeclarationStatement(VariableDeclaration dec)  {
         super(dec.loc);
         this.dec = dec;
     }
 
-    public VariableDeclarationStatement(location loc, Token.TokenType type, String name, Expression initializer)  {
+    public VariableDeclarationStatement(location loc, Type type, String name, Expression initializer)  {
         super(loc);
         this.dec = new VariableDeclaration(loc, type, name, initializer);
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

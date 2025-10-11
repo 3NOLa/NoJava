@@ -1,6 +1,8 @@
 package com.parser.declaration;
 
 import com.lexer.Token;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.List;
@@ -29,6 +31,15 @@ public class ClassDeclaration extends Declaration{
         this.body = body;
         this.superClass = superClass;
         this.interfaces = interfaces;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public BlockDeclaration getBlockDeclaration() {
+        return (BlockDeclaration) this.body;
     }
 
     @Override

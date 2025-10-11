@@ -1,6 +1,8 @@
 package com.parser.declaration;
 
 import com.lexer.Token;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.List;
@@ -18,6 +20,15 @@ public class InterfaceDeclaration extends Declaration{
         this.InterfaceName = InterfaceName;
         this.body = body;
         this.superinterface = superinterface;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public BlockDeclaration getDeclarationList(){
+        return (BlockDeclaration) this.body;
     }
 
     @Override

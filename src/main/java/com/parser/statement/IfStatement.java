@@ -1,6 +1,8 @@
 package com.parser.statement;
 
 import com.parser.expression.Expression;
+import com.semantic.ASTVisitor;
+import com.semantic.StatementVisitor;
 import com.util.location;
 
 public class IfStatement extends Statement{
@@ -22,6 +24,11 @@ public class IfStatement extends Statement{
         this.condition = condition;
         this.then = then;
         this._else = _else;
+    }
+
+    @Override
+    public void accept(StatementVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

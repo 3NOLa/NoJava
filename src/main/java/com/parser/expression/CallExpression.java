@@ -1,5 +1,7 @@
 package com.parser.expression;
 
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
 import java.util.ArrayList;
@@ -14,6 +16,11 @@ public class CallExpression extends Expression{
         super(loc);
         this.func = func;
         this.args = args;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

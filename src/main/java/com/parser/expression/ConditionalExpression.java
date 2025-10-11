@@ -1,5 +1,7 @@
 package com.parser.expression;
 
+import com.semantic.ASTVisitor;
+import com.semantic.ExpressionVisitor;
 import com.util.location;
 
 public class ConditionalExpression extends Expression{
@@ -13,6 +15,11 @@ public class ConditionalExpression extends Expression{
         this.condition = condition;
         this.then = then;
         this._else = _else;
+    }
+
+    @Override
+    public <T> T accept(ExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override
