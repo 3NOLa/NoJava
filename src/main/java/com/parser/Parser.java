@@ -61,7 +61,7 @@ public class Parser {
     }
 
     public Declaration parseDeclaration(){
-        Token.TokenType[] modifiers = getModifiers();
+        HashSet<Token.TokenType> modifiers = getModifiers();
         Token tokentype = cur.get(); //or kw (class, interface) or type(int ,char)
         Token name = cur.get(Token.TokenType.IDENTIFIER);
 
@@ -119,8 +119,8 @@ public class Parser {
         return args;
     }
 
-    private Token.TokenType[] getModifiers(){
-        Set<Token.TokenType> seenModifiers = new LinkedHashSet<>();
+    private HashSet<Token.TokenType>getModifiers(){
+        HashSet<Token.TokenType> seenModifiers = new LinkedHashSet<>();
         Token.TokenType accessModifier = null;
 
         while (Grammer.Modifiers.contains(cur.peek().type)) {
@@ -138,7 +138,7 @@ public class Parser {
                 accessModifier = modifier.type;
             }
         }
-        return seenModifiers.toArray(new Token.TokenType[0]);
+        return seenModifiers;
     }
 
     public Declaration parseDeclarationBlock(){
@@ -151,7 +151,7 @@ public class Parser {
         return new BlockDeclaration(loc.loc,decls);
     }
 
-    public Declaration parseClass(Token.TokenType[] modifiers, Token name){
+    public Declaration parseClass(HashSet<Token.TokenType> modifiers, Token name){
         Token superclass = cur.match(Token.TokenType.KW_EXTENDS) ? cur.get(Token.TokenType.IDENTIFIER) : null;
         List<Token> interfaces = new ArrayList<>();
         if(cur.match(Token.TokenType.KW_IMPLEMENTS)){
@@ -165,7 +165,7 @@ public class Parser {
         return new ClassDeclaration(name.loc, modifiers, name.value, body, superclass, interfaces);
     }
 
-    public Declaration parseInterface(Token.TokenType[] modifiers, Token name){
+    public Declaration parseInterface(HashSet<Token.TokenType> modifiers, Token name){
         List<Token> superinterface = new ArrayList<>();
         if(cur.match(Token.TokenType.KW_EXTENDS)){
             do{

@@ -5,16 +5,17 @@ import com.semantic.ASTVisitor;
 import com.semantic.StatementVisitor;
 import com.util.location;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class InterfaceDeclaration extends Declaration{
 
-    public Token.TokenType[] Modifiers;
+    public HashSet<Token.TokenType> Modifiers;
     public String InterfaceName;
     public Declaration body;
     public List<Token> superinterface;
 
-    public InterfaceDeclaration(location loc, Token.TokenType[] Modifiers, String InterfaceName, Declaration body, List<Token> superinterface) {
+    public InterfaceDeclaration(location loc, HashSet<Token.TokenType> Modifiers, String InterfaceName, Declaration body, List<Token> superinterface) {
         super(loc);
         this.Modifiers = Modifiers;
         this.InterfaceName = InterfaceName;

@@ -5,17 +5,18 @@ import com.semantic.ASTVisitor;
 import com.semantic.StatementVisitor;
 import com.util.location;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class ClassDeclaration extends Declaration{
 
-    public Token.TokenType[] Modifiers;
+    public HashSet<Token.TokenType> Modifiers;
     public String className;
     public Token superClass;
     public Declaration body;
     public List<Token> interfaces;
 
-    public ClassDeclaration(location loc, Token.TokenType[] Modifiers, String className, Declaration body) {
+    public ClassDeclaration(location loc, HashSet<Token.TokenType> Modifiers, String className, Declaration body) {
         super(loc);
         this.Modifiers = Modifiers;
         this.className = className;
@@ -24,7 +25,7 @@ public class ClassDeclaration extends Declaration{
     }
 
 
-    public ClassDeclaration(location loc, Token.TokenType[] Modifiers, String className, Declaration body, Token superClass, List<Token> interfaces) {
+    public ClassDeclaration(location loc, HashSet<Token.TokenType> Modifiers, String className, Declaration body, Token superClass, List<Token> interfaces) {
         super(loc);
         this.Modifiers = Modifiers;
         this.className = className;

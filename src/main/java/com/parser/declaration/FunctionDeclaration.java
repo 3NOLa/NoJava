@@ -7,17 +7,18 @@ import com.semantic.StatementVisitor;
 import com.util.location;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class FunctionDeclaration extends Declaration{
 
-    public Token.TokenType[] Modifiers;
+    public HashSet<Token.TokenType> Modifiers;
     public String funcName;
     public Type returnType;
     public List<VariableDeclaration> args;
     public Statement body;
 
-    public FunctionDeclaration(location loc, Token.TokenType[] Modifiers, String funcName,
+    public FunctionDeclaration(location loc, HashSet<Token.TokenType> Modifiers, String funcName,
                                Type returnType, List<VariableDeclaration> args, Statement body) {
         super(loc);
         this.Modifiers = Modifiers;
@@ -37,7 +38,7 @@ public class FunctionDeclaration extends Declaration{
             throw new RuntimeException("Object isn't a DeclarationFunction");
         }
 
-        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && Arrays.equals(Modifiers, func.Modifiers);
+        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && Modifiers.equals(func.Modifiers);
     }
 
     public boolean overLoading(Object o){
@@ -45,7 +46,7 @@ public class FunctionDeclaration extends Declaration{
             throw new RuntimeException("Object isn't a DeclarationFunction");
         }
 
-        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && !Arrays.equals(Modifiers, func.Modifiers);
+        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && !Modifiers.equals(func.Modifiers);
     }
 
     @Override
