@@ -1,14 +1,19 @@
 package com.parser.declaration;
 
 import com.lexer.Token;
+import com.parser.ASTnode;
 import com.semantic.ASTVisitor;
+import com.semantic.SemanticError;
 import com.semantic.StatementVisitor;
+import com.util.Vertex;
 import com.util.location;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class ClassDeclaration extends Declaration{
+public class ClassDeclaration extends Declaration implements Vertex {
 
     public HashSet<Token.TokenType> Modifiers;
     public String className;
@@ -41,6 +46,29 @@ public class ClassDeclaration extends Declaration{
 
     public BlockDeclaration getBlockDeclaration() {
         return (BlockDeclaration) this.body;
+    }
+
+    @Override
+    public List<Vertex> getEdges(HashMap<String, Vertex> vertices) {
+        List<Vertex> superDeclarations = new ArrayList<>();
+        for (Token t : this.interfaces){
+            if (!vertices.containsKey(t.value)){
+                throw new SemanticError("Interface: " + t.value + " isn't declared from class: " + this.className);
+            }
+            superDeclarations.add(vertices.get(t.value));
+        }
+        if (this.superClass != null){
+            if (!vertices.containsKey(this.superClass.value)){
+                throw new SemanticError("Super class: " + this.superClass.value + " isn't declared from class: " + this.className);
+            }
+            superDeclarations.add(vertices.get(this.superClass.value));
+        }
+        return superDeclarations;
+    }
+
+    @Override
+    public ASTnode getValue() {
+        return this;
     }
 
     @Override

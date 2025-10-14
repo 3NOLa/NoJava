@@ -3,6 +3,7 @@ package com.parser.declaration;
 import com.lexer.Token;
 import com.parser.Type;
 import com.parser.statement.Statement;
+import com.semantic.SemanticError;
 import com.semantic.StatementVisitor;
 import com.util.location;
 
@@ -26,6 +27,8 @@ public class FunctionDeclaration extends Declaration{
         this.returnType = returnType;
         this.args = args;
         this.body = body;
+
+
     }
 
     @Override
@@ -47,6 +50,16 @@ public class FunctionDeclaration extends Declaration{
         }
 
         return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args) && !Modifiers.equals(func.Modifiers);
+    }
+
+    public boolean sameSignatureAbstract(Object o){
+        if (!(o instanceof FunctionDeclaration func)){
+            throw new RuntimeException("Object isn't a DeclarationFunction");
+        }
+
+        //if (func.Modifiers.contains(Token.TokenType.KW_ABSTRACT) )
+
+        return funcName.equals(func.funcName) && returnType.equals(func.returnType) && args.equals(func.args);
     }
 
     @Override
